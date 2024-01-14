@@ -79,7 +79,7 @@ pipeline {
             script{
                 dir('k8s_manifests/mongo'){
                     withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                        sh 'kubectl create namespace workshop10'
+                        sh 'kubectl create namespace workshop'
                         sh 'kubectl apply -f secrets.yaml'
                         sh 'kubectl apply -f deploy.yaml'
                         sh 'kubectl apply -f service.yaml'
