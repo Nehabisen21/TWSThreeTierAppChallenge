@@ -6,7 +6,7 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace ') {
+        stage('Jenkins: Clean Workspace ') {
             steps {
                 //Adding red color
                 ansiColor('vga'){
@@ -16,7 +16,7 @@ pipeline {
             }
         }
         
-        stage("Code Checkout"){
+        stage("Git: Code Checkout"){
             steps{
                  //Adding red color
                 ansiColor('vga'){
@@ -26,7 +26,7 @@ pipeline {
             }
         }
         
-        stage("Sonarqube Analysis"){
+        stage("SonarQube: Code Analysis"){
             steps{
                  //Adding red color
                 ansiColor('vga'){
@@ -35,6 +35,61 @@ pipeline {
                 withSonarQubeEnv("sonar"){
                  sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=threetierapp -Dsonar.projectName=threetierapp'''
                 }
+            }
+        }
+
+        stage("SonarQube: Code Quality Gates Check"){
+            steps{
+                 //Adding red color
+                ansiColor('vga'){
+                  echo '\033[31mQuality Gates Check:\033[0m'
+                }
+                timeout(time: 2, unit: "MINUTES"){
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage("OWASP: Dependency Check"){
+            steps{
+                 //Adding red color
+                ansiColor('vga'){
+                  echo '\033[31mDependency Checking:\033[0m'
+                }
+                dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'DC'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+
+        stage("Trivy: File system Scan"){
+            steps{
+                 //Adding red color
+                ansiColor('vga'){
+                  echo '\033[31mFile system scanning:\033[0m'
+                }
+                sh 'trivy fs . > trivy-fs-report.txt'
+            }
+        }
+
+        stage("Docker: Build image and push to AWS ECR"){
+            steps{
+                 //Adding red color
+                ansiColor('vga'){
+                  echo '\033[31mDocker login:\033[0m'
+                }
+                sh 'aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/m5h4e3m3'
+                ansiColor('vga'){
+                  echo '\033[31mDocker Building:\033[0m'
+                }
+                sh 'docker build -t threetier .'
+                ansiColor('vga'){
+                  echo '\033[31mDocker Tag:\033[0m'
+                }
+                sh 'docker tag threetier:latest public.ecr.aws/m5h4e3m3/threetier:latest'
+                ansiColor('vga'){
+                  echo '\033[31mDocker Push:\033[0m'
+                }
+                sh 'docker push public.ecr.aws/m5h4e3m3/threetier:latest'
             }
         }
     }
