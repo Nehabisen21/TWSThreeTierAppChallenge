@@ -8,19 +8,30 @@ pipeline {
     stages {
         stage('Clean Workspace ') {
             steps {
-                echo "Cleaning Workspace:"
+                # Adding red color
+                ansiColor('vga'){
+                  echo '\033[31mCleaning Workspace:\033[0m'
+                }
                 cleanWs()
             }
         }
         
         stage("Code Checkout"){
             steps{
+                 # Adding red color
+                ansiColor('vga'){
+                  echo '\033[31mChecking out code:\033[0m'
+                }
                 git url: "https://github.com/Nehabisen21/TWSThreeTierAppChallenge.git", branch: "main"
             }
         }
         
         stage("Sonarqube Analysis"){
             steps{
+                 # Adding red color
+                ansiColor('vga'){
+                  echo '\033[31mAnalizing Code:\033[0m'
+                }
                 withSonarQubeEnv("sonar"){
                  sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=threetierapp -Dsonar.projectName=threetierapp'''
                 }
