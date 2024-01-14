@@ -81,6 +81,36 @@ pipeline {
         }
     }
     stage("Deploy to K8s"){
-        
+        steps{
+            script{
+                dir('k8s_manifests/mongo'){
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                        sh 'kubectl create namespace workshop'
+                        sh 'kubectl apply -f secrets.yaml'
+                        sh 'kubectl apply -f deploy.yaml'
+                        sh 'kubectl apply -f service.yaml'
+                }
+                }
+                dir('k8s_manifests'){
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                        sh 'kubectl apply -f backend-deployment.yaml'
+                        sh 'kubectl apply -f backend-service.yaml'
+                        sh 'kubectl apply -f frontend-deployment.yaml'
+                        sh 'kubectl apply -f frontend-service.yaml'
+                        sh 'kubectl apply -f full_stack_lb'
+                  }
+                }
+            post {
+             always {
+                emailext attachLog: true,
+                subject: "'${currentBuild.result}'",
+                body: "Project: ${env.JOB_NAME}<br/>" +
+                    "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                    "URL: ${env.BUILD_URL}<br/>",
+                to: '8007930568pandey@gmail.com'  #change Your mail
+                    }
+                }
+            }
+        }
     }
 }
