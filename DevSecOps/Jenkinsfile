@@ -65,6 +65,25 @@ pipeline {
                 }     
             }
         }
+
+        stage("Docker backend: Build image and push to AWS ECR"){
+            steps{
+                dir("/var/lib/jenkins/workspace/App/backend"){
+                //ECR Login
+                aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/m5h4e3m3
+                    
+                //Docker Build
+                sh 'docker build -t backend .'
+                
+                //Docker tag
+                sh 'docker tag backend:latest public.ecr.aws/m5h4e3m3/backend:latest'
+
+                //Docker push
+                sh 'docker push public.ecr.aws/m5h4e3m3/backend:latest'
+
+                }     
+            }
+        }
     
     stage("Deploy to K8s"){
         steps{
