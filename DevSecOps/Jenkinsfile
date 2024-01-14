@@ -62,6 +62,8 @@ pipeline {
                 //Docker push
                 sh 'docker push public.ecr.aws/m5h4e3m3/threetier:latest'
 
+                }
+
                 //-------------------------------------------------------------------------
 
                 dir("/var/lib/jenkins/workspace/App/backend"){
