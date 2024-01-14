@@ -102,7 +102,7 @@ pipeline {
                         sh 'kubectl apply -f backend-service.yaml'
                         sh 'kubectl apply -f frontend-deployment.yaml'
                         sh 'kubectl apply -f frontend-service.yaml'
-                        sh 'kubectl apply -f full_stack_lb'
+                        sh 'kubectl apply -f full_stack_lb.yaml'
                   }
                 }
             post {
