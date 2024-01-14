@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clean Workspace ') {
             steps {
-                # Adding red color
+                //Adding red color
                 ansiColor('vga'){
                   echo '\033[31mCleaning Workspace:\033[0m'
                 }
@@ -18,7 +18,7 @@ pipeline {
         
         stage("Code Checkout"){
             steps{
-                 # Adding red color
+                 //Adding red color
                 ansiColor('vga'){
                   echo '\033[31mChecking out code:\033[0m'
                 }
@@ -28,7 +28,7 @@ pipeline {
         
         stage("Sonarqube Analysis"){
             steps{
-                 # Adding red color
+                 //Adding red color
                 ansiColor('vga'){
                   echo '\033[31mAnalizing Code:\033[0m'
                 }
