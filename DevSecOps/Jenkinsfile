@@ -94,16 +94,6 @@ pipeline {
                         sh 'kubectl apply -f full_stack_lb.yaml'
                   }
                 }
-            post {
-             always {
-                emailext attachLog: true,
-                subject: "'${currentBuild.result}'",
-                body: "Project: ${env.JOB_NAME}<br/>" +
-                    "Build Number: ${env.BUILD_NUMBER}<br/>" +
-                    "URL: ${env.BUILD_URL}<br/>",
-                to: '8007930568pandey@gmail.com'  
-                    }
-                }
             }
         }
     }
