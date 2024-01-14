@@ -49,7 +49,7 @@ pipeline {
 
         stage("Docker: Build image and push to AWS ECR"){
             steps{
-                dir("${env.WORKSPACE/backend}")
+                dir("/var/lib/jenkins/workspace/App/backend")
                 //ECR Login
                 sh 'aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/m5h4e3m3'
 
