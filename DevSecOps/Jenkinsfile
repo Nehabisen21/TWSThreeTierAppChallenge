@@ -47,7 +47,7 @@ pipeline {
             }
         }
 
-        stage("Docker: Build image and push to AWS ECR"){
+        stage("Docker frontend: Build image and push to AWS ECR"){
             steps{
                 dir("/var/lib/jenkins/workspace/App/frontend"){
                 //ECR Login
@@ -62,10 +62,12 @@ pipeline {
                 //Docker push
                 sh 'docker push public.ecr.aws/m5h4e3m3/threetier:latest'
 
-                }
+                }     
+            }
+        }
 
-                //-------------------------------------------------------------------------
-
+        stage("Docker backend: Build image and push to AWS ECR"){
+            steps{
                 dir("/var/lib/jenkins/workspace/App/backend"){
                 //ECR Login
                 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/m5h4e3m3
@@ -78,7 +80,7 @@ pipeline {
 
                 //Docker push
                 sh 'docker push public.ecr.aws/m5h4e3m3/backend:latest'
-                }     
+                }
             }
         }
     
@@ -115,4 +117,5 @@ pipeline {
             }
         }
     }
+}
 }
