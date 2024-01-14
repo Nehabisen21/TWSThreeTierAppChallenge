@@ -63,13 +63,13 @@ pipeline {
                 sh 'docker push public.ecr.aws/m5h4e3m3/threetier:latest'
 
                 //Docker Build Backend
-                docker build -t backend .
+                sh 'docker build -t backend .'
 
                 //Docker tag
-                docker tag backend:latest public.ecr.aws/m5h4e3m3/backend:latest
+                sh 'docker tag backend:latest public.ecr.aws/m5h4e3m3/backend:latest'
 
                 //Docker push
-                docker push public.ecr.aws/m5h4e3m3/backend:latest
+                sh 'docker push public.ecr.aws/m5h4e3m3/backend:latest'
                 }     
             }
         }
