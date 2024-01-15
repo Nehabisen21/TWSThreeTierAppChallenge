@@ -94,8 +94,26 @@ pipeline {
                         sh 'kubectl apply -f full_stack_lb.yaml'
                   }
                 }
+             }
+          }
+       }
+    }
+    post{
+            always{
+                emailext(
+                    subject: "Pipeline status: ${BUILD_NUMBER}",
+                    body: '''<html>
+                                <body>
+                                    <li>aur kya bolte neha ji, jenkins se aaya hai ye mail 💌 notification via pipeline</li>
+                                    <li>Build status:${BUILD_STATUS}</li>
+                                    <li>Check the <a href="${BUILD_URL}">Console output</a></li>
+                                </body>
+                             </html>''',
+                    to: 'bisen.neha21@gmail.com',
+                    from: 'bisen.neha21@gmail.com',
+                    replyTo: 'bisen.neha21@gmail.com',
+                    mimeType: 'text/html'   
+                )
             }
         }
-    }
-}
 }
